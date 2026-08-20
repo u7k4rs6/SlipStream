@@ -28,6 +28,7 @@ class ParseReport:
     rows_parsed: int = 0
     skipped: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
+    merged_rows: int = 0        # same problem seen in more than one source
 
     def warn(self, msg: str) -> None:
         if msg not in self.warnings:
@@ -188,14 +189,38 @@ def normalize(
             continue
 
         if report is not None:
-            report.warn(f"duplicate id {pid} for key {key!r} ({existing.title!r} / {candidate.title!r})")
+            report.merged_rows += 1
+            # Only *conflicting* duplicates are warned about. Every row legitimately
+            # appears twice -- once in README, once on its formats page -- so
+            # warning on each would bury the handful of real collisions under two
+            # thousand lines of noise and make meta.json useless.
+            if existing.title != candidate.title:
+                report.warn(
+                    f"same URL under two titles: {key!r} "
+                    f"({existing.title!r} / {candidate.title!r})"
+                )
+            elif (
+                existing.format
+                and candidate.format
+                and existing.format != candidate.format
+            ):
+                report.warn(
+                    f"sources disagree on format for {key!r}: "
+                    f"{existing.format!r} / {candidate.format!r}"
+                )
         out[pid] = _merge_duplicate(existing, candidate)
 
     return out
 
 
 def _merge_duplicate(a: model.Problem, b: model.Problem) -> model.Problem:
-    """Prefer the newer upstream date; union companies and sources."""
+    """Prefer the newer upstream date; union companies and sources.
+
+    On an equal date -- which is the normal case, since the same row is being
+    seen twice through two sources -- the *first* entry wins. fetch.SOURCES puts
+    README first deliberately: its Format column is the authoritative label,
+    while a formats page can only assert the format its whole page is about.
+    """
     newer, older = (a, b)
     if (b.upstream_updated or "") > (a.upstream_updated or ""):
         newer, older = (b, a)

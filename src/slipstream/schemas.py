@@ -77,8 +77,12 @@ ROUTE_FORMATS = {
     "project-coding": "AI coding",
 }
 
-# Sentinel company meaning "no source-backed employer was reported".
+# Sentinel company cells meaning "no source-backed employer was reported".
+# Upstream uses two spellings; both must be treated as absence rather than as a
+# company, or the UI grows a phantom employer with a handful of questions and
+# the company filter offers it as a real choice.
 UNATTRIBUTED = "Unattributed"
+SENTINEL_COMPANIES = frozenset({"unattributed", "unknown company"})
 
 
 class UnknownSchemaError(Exception):

@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "upstream_sha": "d163035c2bb54ae9a5f14182ff6d756e6cdfecd0",
+  "synced_at": "2026-08-20T21:11:37+00:00",
+  "sources": {
+    "README.md": "42c0684fca770844ef1242f14baaa17700fe02d8b7264724cb03135c92fc7c7f",
+    "assets/company-domains.json": "a7b781d61138b5f7aececdd3dde832f897bf0ce6c1e75da3c668c947f152cd76",
+    "formats/ai-coding.md": "82101aa68864a572c68ea7a32d7d65535a8878dc8f32c4d8f27e5cae9810a95e",
+    "formats/coding.md": "c017d68a092d53f875799e6a700918b483ab8a9936c461dea501d6e670a3522f",
+    "formats/low-level-design.md": "00d04041955d48299a486890c1d724ede2036c0379315ff20b3fc6b05bf7dded",
+    "formats/sql.md": "242ae3042076a3cb9ad5d1d73c6b4df64ca30aba16821458eb318f3f3c2b6049",
+    "formats/system-design.md": "bda5c2efa45eff7fbf51f9f45b31bd437a4fb227e51d77283cb8a79f4e13b108"
+  },
+  "counts": {
+    "live": 1932,
+    "tombstoned": 0,
+    "total": 1932
+  },
+  "warnings": [
+    "merged: company not in vocabulary: 'Virtu Financial'",
+    "merged: company not in vocabulary: 'Kikoff'",
+    "merged: company not in vocabulary: 'The Allen Institute for AI'",
+    "merged: company not in vocabulary: 'Nooks'",
+    "merged: company not in vocabulary: 'Arcesium'",
+    "merged: company not in vocabulary: 'IndiaMART'",
+    "merged: company not in vocabulary: \"Moody's\"",
+    "merged: company not in vocabulary: 'MulticoreWare'",
+    "merged: company not in vocabulary: 'Shipsy'",
+    "merged: company not in vocabulary: 'Stryker'",
+    "merged: company not in vocabulary: 'Hive'",
+    "merged: company not in vocabulary: 'Illumio'",
+    "merged: company not in vocabulary: 'Nuro'",
+    "merged: company not in vocabulary: 'SAP Labs'",
+    "merged: company not in vocabulary: 'Serval'",
+    "merged: company not in vocabulary: 'Together AI'",
+    "merged: same URL under two titles: 'problems/1.amazon-get-min-score1' ('Get Min Score' / 'Looking for a Matching Score')",
+    "merged: same URL under two titles: 'problems/amazon-buy-volumes' ('Buy Volumes' / 'Determine Purchases')",
+    "merged: same URL under two titles: 'problems/akuna-items-sort' ('Sort Array by Frequency' / 'Itens Sort')",
+    "merged: same URL under two titles: 'problems/amazon-minimum-retailers' ('Min Retailers' / 'Count Number of Retailers')",
+    "merged: same URL under two titles: 'problems/snowflake-efficient-deployments' ('Efficient Deployments' / 'Max Efficiency')",
+    "merged: same URL under two titles: 'problems/1.amazon-get-longest-match' ('Longest Matching Regex' / 'Get Longest Match')"
+  ],
+  "last_change_date": "2026-08-20",
+  "changes": {
+    "added": 1932,
+    "removed": 0,
+    "retitled": 0,
+    "relinked": 0,
+    "recompanied": 0
+  },
+  "ambiguous_relinks": 0
+}

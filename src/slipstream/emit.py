@@ -24,6 +24,15 @@ from .model import Problem
 
 SCHEMA_VERSION = 1
 
+# Fields that move on every run without carrying new information. Every live row
+# shares the same `last_seen` -- by definition it is the current sync -- so
+# advancing it daily would rewrite all ~1,900 rows every morning and commit a
+# 120 KB diff saying nothing. Rewriting is skipped when these are the only
+# difference, which is what makes an unchanged upstream a true no-op (arch §6).
+# The cost: on a quiet day `last_seen` lags, and meta.json's `synced_at` is the
+# authority on when the sync actually last ran.
+VOLATILE_FIELDS = ("last_seen",)
+
 
 class EmitError(Exception):
     """Raised when an existing artifact cannot be safely extended."""
@@ -35,6 +44,10 @@ MIN_PREFIX = 3
 _WORD = re.compile(r"[a-z0-9]+")
 
 CHANGELOG_TITLE = "# Changelog"
+# The changelog is for reading. The bootstrap run legitimately "adds" ~1,900
+# rows, and listing them all produces a 100 KB entry nobody scrolls through, so
+# long lists are truncated with a pointer to the complete machine-readable file.
+CHANGELOG_MAX_PER_KIND = 50
 _SECTION = re.compile(r"^## (\d{4}-\d{2}-\d{2})\s*$", re.M)
 
 _KIND_HEADINGS = {
@@ -183,8 +196,11 @@ def changelog_section(result: DiffResult, problems: dict[str, Problem]) -> str:
             continue
         lines.append(f"### {_KIND_HEADINGS[kind]} ({len(changes)})")
         lines.append("")
-        for change in changes:
+        for change in changes[:CHANGELOG_MAX_PER_KIND]:
             lines.append(f"- {_describe(change, problems)}")
+        if len(changes) > CHANGELOG_MAX_PER_KIND:
+            rest = len(changes) - CHANGELOG_MAX_PER_KIND
+            lines.append(f"- …and {rest} more (see `data/changes/{result.date}.json`)")
         lines.append("")
     if result.ambiguous_relinks:
         lines.append(f"### Needs confirmation ({len(result.ambiguous_relinks)})")
@@ -303,10 +319,12 @@ def emit(
         if changed and counts_as_dataset:
             report.dataset_changed = True
 
-    record(
-        root / "problems.json",
-        write_text(root / "problems.json", dumps_rows(problems_document(problems), "problems")),
-    )
+    problems_path = root / "problems.json"
+    doc = problems_document(problems)
+    if _only_volatile_changes(problems_path, doc):
+        record(problems_path, False)
+    else:
+        record(problems_path, write_text(problems_path, dumps_rows(doc, "problems")))
     record(root / "index.json", write_json(root / "index.json", search_index(problems)))
 
     existing_archive = _read_archive(root / "archive.json")
@@ -317,20 +335,24 @@ def emit(
         write_text(root / "archive.json", dumps_rows(archive, "archived")),
     )
 
-    if result is not None:
+    # A day with no changes writes no change document at all. An empty one would
+    # be committed noise, and it would overwrite latest.json -- which the
+    # What's-new view reads -- with "nothing happened" on every quiet day.
+    if result is not None and (result.changes or result.ambiguous_relinks):
         changes_dir = root / "changes"
         doc = result.to_dict()
         record(changes_dir / f"{result.date}.json", write_json(changes_dir / f"{result.date}.json", doc, compact=False))
         record(changes_dir / "latest.json", write_json(changes_dir / "latest.json", doc, compact=False))
 
-        if result.changes or result.ambiguous_relinks:
-            path = changelog_path or (root.parent / "CHANGELOG.md")
-            existing = path.read_text(encoding="utf-8") if path.exists() else CHANGELOG_TITLE + "\n"
-            changed = write_text(
+        path = changelog_path or (root.parent / "CHANGELOG.md")
+        existing = path.read_text(encoding="utf-8") if path.exists() else CHANGELOG_TITLE + "\n"
+        record(
+            path,
+            write_text(
                 path,
                 update_changelog(existing, changelog_section(result, problems), result.date),
-            )
-            record(path, changed)
+            ),
+        )
 
     record(
         root / "meta.json",
@@ -338,6 +360,56 @@ def emit(
         counts_as_dataset=False,
     )
     return report
+
+
+def load_problems(path: Path) -> dict[str, Problem]:
+    """Read a previously emitted problems.json back into memory.
+
+    A missing file is the first-ever run and yields an empty dataset. An
+    unreadable one is not: it would make every existing row look newly added and
+    every tombstone vanish, so it fails instead.
+    """
+    path = Path(path)
+    if not path.exists():
+        return {}
+    try:
+        doc = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise EmitError(
+            f"{path} exists but is not valid JSON ({exc}). Refusing to treat the "
+            "committed dataset as empty; restore it from git history first."
+        ) from None
+    if not isinstance(doc, dict) or not isinstance(doc.get("problems"), list):
+        raise EmitError(f"{path} is not a problems document. Refusing to proceed.")
+    problems = [Problem.from_dict(row) for row in doc["problems"]]
+    return {p.id: p for p in problems}
+
+
+def _only_volatile_changes(path: Path, doc: dict) -> bool:
+    """True when the committed file differs from ``doc`` in volatile fields only."""
+    existing = _read_json_or_none(path)
+    if not existing or not isinstance(existing.get("problems"), list):
+        return False
+
+    def strip(rows):
+        return [
+            {k: v for k, v in row.items() if k not in VOLATILE_FIELDS} for row in rows
+        ]
+
+    head_old = {k: v for k, v in existing.items() if k != "problems"}
+    head_new = {k: v for k, v in doc.items() if k != "problems"}
+    return head_old == head_new and strip(existing["problems"]) == strip(doc["problems"])
+
+
+def _read_json_or_none(path: Path) -> dict | None:
+    """Best-effort read, for callers where a missing or broken file just means
+    'no prior information' -- never for the archive or the dataset."""
+    if not Path(path).exists():
+        return None
+    try:
+        return json.loads(Path(path).read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
 
 
 def _read_archive(path: Path) -> dict | None:

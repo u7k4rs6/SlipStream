@@ -3,3 +3,7 @@ __pycache__/
 .pytest_cache/
 *.egg-info/
 .venv/
+
+# Emitted dataset is committed deliberately (it IS the site's data), but the
+# scratch snapshot used for local analysis is not.
+.upstream-cache/

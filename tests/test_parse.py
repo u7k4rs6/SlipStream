@@ -203,7 +203,43 @@ def test_duplicate_urls_merge_keeping_the_newer_date(vocab):
     assert p.title == "Buy Volume"
     assert p.upstream_updated == "2026-08-12"
     assert p.companies == ["Meta", "Amazon"]
-    assert any("duplicate id" in w for w in report.warnings)
+    assert any("same URL under two titles" in w for w in report.warnings)
+    assert report.merged_rows == 1
+
+
+def test_the_same_row_seen_in_two_sources_is_not_a_warning(vocab):
+    """Every row legitimately appears in README and on its formats page.
+
+    Warning on each would bury the handful of real collisions under two thousand
+    lines of noise.
+    """
+    text = read_fixture("upstream", "formats-sql-4col.md")
+    readme, _ = parse.parse_document(text, "README.md", "SQL")
+    formats, _ = parse.parse_document(text, "formats/sql.md", "SQL")
+    report = parse.ParseReport(source="merged")
+    problems = parse.normalize(readme + formats, vocab, TODAY, report)
+    assert len(problems) == 2
+    assert report.merged_rows == 2
+    assert not [w for w in report.warnings if "same URL" in w or "disagree" in w]
+    # Provenance from both sources is preserved on the merged record.
+    assert sorted(next(iter(problems.values())).sources) == ["README.md", "formats/sql.md"]
+
+
+def test_sources_disagreeing_on_format_is_a_warning(vocab):
+    """Silent disagreement would mean the format facet is quietly wrong."""
+    readme, _ = parse_fixture("formats-sql-4col.md")            # route says Coding
+    formats, _ = parse_fixture("formats-sql-4col.md", format_hint="SQL")
+    report = parse.ParseReport(source="merged")
+    parse.normalize(readme + formats, vocab, TODAY, report)
+    assert any("disagree on format" in w for w in report.warnings)
+
+
+def test_unknown_company_sentinel_is_not_a_company(vocab):
+    """Upstream uses two spellings for 'no employer reported'."""
+    assert vocab.split_cell("Unknown Company") == ([], [])
+    names, unknown = vocab.split_cell("Amazon / Unknown Company")
+    assert names == ["Amazon"]
+    assert unknown == []
 
 
 def test_linkless_rows_do_not_collide(vocab):

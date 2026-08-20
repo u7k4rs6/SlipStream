@@ -16,7 +16,7 @@ import json
 import re
 from dataclasses import dataclass, field
 
-from .schemas import UNATTRIBUTED
+from .schemas import SENTINEL_COMPANIES
 
 SEPARATOR = re.compile(r"\s+/\s+")
 
@@ -65,7 +65,7 @@ class CompanyVocabulary:
         text = " ".join(cell.split())
         if not text:
             return [], []
-        if _norm(text) == _norm(UNATTRIBUTED):
+        if _norm(text) in SENTINEL_COMPANIES:
             return [], []
 
         parts = SEPARATOR.split(text)
@@ -84,6 +84,9 @@ class CompanyVocabulary:
                     break
             else:
                 token = parts[i]
+                if _norm(token) in SENTINEL_COMPANIES:
+                    i += 1
+                    continue
                 out.append(self.display(token))
                 if token not in self:
                     unknown.append(token)
