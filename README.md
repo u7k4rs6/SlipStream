@@ -5,10 +5,10 @@ A personal, always-current tracker built on top of the public
 question bank: automatic daily sync, a personal study layer that survives every upstream
 change, a daily diff of what moved, and a static browsing UI.
 
-> **Status: early implementation.** Parsing, normalization, diffing, and the abort
-> guardrails are built and tested against pinned upstream fixtures (`pytest -q`). The
-> scheduled sync, the emitted `data/` artifacts, persistence, and the frontend are not
-> written yet.
+> **Status: early implementation.** Parsing, normalization, diffing, the abort
+> guardrails, and the artifact emitter are built and tested against pinned upstream
+> fixtures (`pytest -q`). The scheduled sync job, personal-layer persistence, and the
+> frontend are not written yet.
 
 ## Documents
 
