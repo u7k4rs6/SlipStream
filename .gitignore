@@ -7,3 +7,5 @@ __pycache__/
 # Emitted dataset is committed deliberately (it IS the site's data), but the
 # scratch snapshot used for local analysis is not.
 .upstream-cache/
+.playwright-mcp/
+*.png

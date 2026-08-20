@@ -1,0 +1,72 @@
+name: sync
+
+on:
+  schedule:
+    # 06:00 UTC daily (D6). Upstream commits hourly, but its content changes far
+    # less often, and a daily diff matches the "what's new today" loop.
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Re-run even if the upstream SHA is unchanged'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Sync upstream
+        id: sync
+        run: |
+          python -m slipstream.sync --data site/data \
+            ${{ inputs.force && '--force' || '' }} | tee sync.log
+        env:
+          PYTHONPATH: src
+
+      - name: Commit if the dataset moved
+        run: |
+          if git diff --quiet -- site/data CHANGELOG.md; then
+            echo "no dataset change; nothing to commit"
+            exit 0
+          fi
+          git config user.name  "slipstream-sync"
+          git config user.email "actions@github.com"
+          git add site/data CHANGELOG.md
+          SHA=$(python -c "import json;print(json.load(open('site/data/meta.json'))['upstream_sha'][:8])")
+          git commit -m "Sync upstream ${SHA}"
+          git push
+
+      # FR-7: a failed sync must be loud. A silently broken daily job is
+      # indistinguishable from an upstream that stopped changing.
+      - name: Open an issue on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create \
+            --title "Sync failed on $(date -u +%Y-%m-%d)" \
+            --label "sync-failure" \
+            --body "The daily sync aborted. Output:
+
+          \`\`\`
+          $(tail -40 sync.log 2>/dev/null || echo 'no output captured')
+          \`\`\`
+
+          [Run log](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+          Nothing was committed, so the published dataset is unchanged and personal data is untouched." \
+            || echo "could not open an issue"
