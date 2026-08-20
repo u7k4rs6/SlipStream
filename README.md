@@ -5,8 +5,9 @@ A personal, always-current tracker built on top of the public
 question bank: automatic daily sync, a personal study layer that survives every upstream
 change, a daily diff of what moved, and a static browsing UI.
 
-> **Status: design phase.** This repository currently contains design documents only.
-> No application code has been written yet.
+> **Status: early implementation.** The parsing and normalization layer is built and
+> tested against pinned upstream fixtures (`pytest -q`). Sync, diffing, persistence, and
+> the frontend are not written yet.
 
 ## Documents
 

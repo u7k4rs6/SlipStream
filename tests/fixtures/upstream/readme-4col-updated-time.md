@@ -1,0 +1,8 @@
+| Company | OA Question | Practice (Beta) | Updated Time |
+| --- | --- | --- | --- |
+| Amazon | [Number Of Well PerformingGroups](https://www.fastprep.io/problems/amazon-number-of-well-performing-groups) | <a href="https://www.fastprep.io/problems/amazon-number-of-well-performing-groups"><img src="https://i.imgur.com/ojP4tYR.png" width="118" alt="Pratice"/> </a> | Mar, 23, 2025 |
+| Amazon | [Ensure Non Zero Load Sum](https://www.fastprep.io/problems/amazon-ensure-non-zero-load-sum) | <a href="https://www.fastprep.io/problems/amazon-ensure-non-zero-load-sum"><img src="https://i.imgur.com/ojP4tYR.png" width="118" alt="Pratice"/> </a> | Mar, 23, 2025 |
+| Amazon | [Get Max Increments](https://www.fastprep.io/problems/amazon-get-max-increments) | <a href="https://www.fastprep.io/problems/amazon-get-max-increments"><img src="https://i.imgur.com/ojP4tYR.png" width="118" alt="Pratice"/> </a> | Mar, 22, 2025 |
+| Amazon | [Password Strength](https://www.fastprep.io/problems/amazon-password-strength) | <a href="https://www.fastprep.io/problems/amazon-password-strength"><img src="https://i.imgur.com/ojP4tYR.png" width="118" alt="Pratice"/> </a> | Mar, 22, 2025 |
+| Amazon | [Find Max Number of Balanced Combinations](https://www.fastprep.io/problems/amazon-find-maximum-number-of-balanced-combinations) | <a href="https://www.fastprep.io/problems/amazon-find-maximum-number-of-balanced-combinations"><img src="https://i.imgur.com/ojP4tYR.png" width="118" alt="Pratice"/> </a> | Mar, 22, 2025 |
+| Amazon | [Trader Joe Trades](https://www.fastprep.io/problems/amazon-trader-joe-trades) | <a href="https://www.fastprep.io/problems/amazon-trader-joe-trades"><img src="https://i.imgur.com/ojP4tYR.png" width="118" alt="Pratice"/> </a> | Mar, 21, 2025 |

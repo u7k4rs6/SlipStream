@@ -1,0 +1,8 @@
+| Company | OA Question | Practice (Beta) | Uploaded Time |
+| --- | --- | --- | --- |
+| Amazon | [Maximum Quality Sum](https://www.fastprep.io/problems/amazon-maximum-quality-sum) | <a href="https://www.fastprep.io/problems/amazon-maximum-quality-sum"><img src="https://i.imgur.com/ojP4tYR.png" width="118" alt="Pratice"/> </a> | Sep, 26, 2024 |
+| Amazon | [Minimize Warehouse Transfer Cost](https://www.fastprep.io/problems/amazon-minimize-warehouse-transfer-cost) | <a href="https://www.fastprep.io/problems/amazon-minimize-warehouse-transfer-cost"><img src="https://i.imgur.com/ojP4tYR.png" width="118" alt="Pratice"/> </a> | Sep, 26, 2024 |
+| Amazon | [Find Sum of Beauties](https://www.fastprep.io/problems/amazon-find-sum-of-beauties) | <a href="https://www.fastprep.io/problems/amazon-find-sum-of-beauties"><img src="https://i.imgur.com/ojP4tYR.png" width="118" alt="Pratice"/> </a> | Sep, 26, 2024 |
+| Amazon | [Longest Perfect Anagrams](https://www.fastprep.io/problems/amazon-longest-perfect-anagrams) | <a href="https://www.fastprep.io/problems/amazon-longest-perfect-anagrams"><img src="https://i.imgur.com/ojP4tYR.png" width="118" alt="Pratice"/> </a> | Sep, 26, 2024 |
+| Amazon | [Find Maximum Calories](https://www.fastprep.io/problems/amazon-find-maximum-calories) | <a href="https://www.fastprep.io/problems/amazon-find-maximum-calories"><img src="https://i.imgur.com/ojP4tYR.png" width="118" alt="Pratice"/> </a> | Sep, 26, 2024 |
+| Amazon | [Get Max Sum](https://www.fastprep.io/problems/amazon-get-max-sum) | <a href="https://www.fastprep.io/problems/amazon-get-max-sum"><img src="https://i.imgur.com/ojP4tYR.png" width="118" alt="Pratice"/> </a> | Sep, 25, 2024 |
