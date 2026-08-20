@@ -9,6 +9,7 @@ already committed -- and it has no write path at all to the personal layer (D2).
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from dataclasses import dataclass, field
 from datetime import date, datetime, timezone
@@ -139,6 +140,21 @@ def sync(
     )
 
 
+def _report_to_ci(changed: bool, sha: str) -> None:
+    """Publish the outcome as a GitHub Actions step output.
+
+    The workflow cannot infer this from `git diff`: meta.json carries a fresh
+    synced_at on every run, so the working tree always looks dirty even when
+    nothing upstream moved. The library knows the difference; CI has to be told.
+    """
+    output = os.environ.get("GITHUB_OUTPUT")
+    if not output:
+        return
+    with open(output, "a", encoding="utf-8") as handle:
+        handle.write(f"dataset_changed={'true' if changed else 'false'}\n")
+        handle.write(f"upstream_sha={sha}\n")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="slipstream-sync", description="Sync the upstream question bank."
@@ -164,8 +180,11 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     if outcome.skipped:
+        _report_to_ci(False, outcome.sha)
         print(f"upstream unchanged at {outcome.sha[:8]}; nothing to do")
         return 0
+
+    _report_to_ci(outcome.changed, outcome.sha)
 
     counts = outcome.result.counts if outcome.result else {}
     live = sum(1 for p in outcome.problems.values() if p.state != "removed")

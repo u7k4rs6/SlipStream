@@ -37,17 +37,21 @@ jobs:
         env:
           PYTHONPATH: src
 
-      - name: Commit if the dataset moved
+      # `git diff` cannot answer this: meta.json carries a fresh synced_at every
+      # run, so the tree always looks dirty. The sync reports what actually moved.
+      - name: Discard a no-op run
+        if: steps.sync.outputs.dataset_changed != 'true'
         run: |
-          if git diff --quiet -- site/data CHANGELOG.md; then
-            echo "no dataset change; nothing to commit"
-            exit 0
-          fi
+          echo "nothing changed; discarding the refreshed timestamp"
+          git checkout -- site/data CHANGELOG.md 2>/dev/null || true
+
+      - name: Commit if the dataset moved
+        if: steps.sync.outputs.dataset_changed == 'true'
+        run: |
           git config user.name  "slipstream-sync"
           git config user.email "actions@github.com"
           git add site/data CHANGELOG.md
-          SHA=$(python -c "import json;print(json.load(open('site/data/meta.json'))['upstream_sha'][:8])")
-          git commit -m "Sync upstream ${SHA}"
+          git commit -m "Sync upstream ${{ steps.sync.outputs.upstream_sha }}"
           git push
 
       # FR-7: a failed sync must be loud. A silently broken daily job is

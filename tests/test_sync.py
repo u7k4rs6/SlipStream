@@ -178,3 +178,39 @@ def test_sync_never_touches_the_personal_layer(tmp_path):
     run(tmp_path)
     assert personal.read_text() == '{"abc": {"status": "solved"}}'
     assert personal.stat().st_mtime_ns == stamp
+
+
+def test_ci_output_reports_a_real_change(tmp_path, monkeypatch):
+    """CI cannot use `git diff`: meta.json is dirty on every run."""
+    output = tmp_path / "gh-output"
+    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
+    sync.main([
+        "--data", str(tmp_path / "data"), "--offline", str(OFFLINE),
+        "--sha", "sha-one", "--changelog", str(tmp_path / "CHANGELOG.md"),
+    ])
+    assert "dataset_changed=true" in output.read_text()
+    assert "upstream_sha=sha-one" in output.read_text()
+
+
+def test_ci_output_reports_a_no_op_run(tmp_path, monkeypatch):
+    args = [
+        "--data", str(tmp_path / "data"), "--offline", str(OFFLINE),
+        "--sha", "sha-one", "--changelog", str(tmp_path / "CHANGELOG.md"),
+    ]
+    sync.main(args)
+    output = tmp_path / "gh-output"
+    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
+    sync.main(args + ["--force"])
+    assert "dataset_changed=false" in output.read_text()
+
+
+def test_ci_output_reports_a_skipped_run(tmp_path, monkeypatch):
+    args = [
+        "--data", str(tmp_path / "data"), "--offline", str(OFFLINE),
+        "--sha", "sha-one", "--changelog", str(tmp_path / "CHANGELOG.md"),
+    ]
+    sync.main(args)
+    output = tmp_path / "gh-output"
+    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
+    sync.main(args)
+    assert "dataset_changed=false" in output.read_text()
