@@ -1,0 +1,636 @@
+{
+  "schema_version": 1,
+  "source": "https://leetcode.com/api/problems/all/",
+  "catalog_count": 4029,
+  "count": 103,
+  "origins": {
+    "03ad8469134d": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/trapping-rain-water/",
+      "title": "Trapping Rain Water",
+      "difficulty": "Hard"
+    },
+    "04757afd9b31": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/largest-number/",
+      "title": "Largest Number",
+      "difficulty": "Medium"
+    },
+    "04bd3ea21b4e": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/largest-number/",
+      "title": "Largest Number",
+      "difficulty": "Medium"
+    },
+    "0513349ffbea": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/count-numbers-with-unique-digits/",
+      "title": "Count Numbers with Unique Digits",
+      "difficulty": "Medium"
+    },
+    "09ac8e13d0ff": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/longest-palindromic-subsequence/",
+      "title": "Longest Palindromic Subsequence",
+      "difficulty": "Medium"
+    },
+    "0b34ff9ed4db": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/special-binary-string/",
+      "title": "Special Binary String",
+      "difficulty": "Hard"
+    },
+    "0e878ed4b301": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/password-strength/",
+      "title": "Password Strength",
+      "difficulty": "Medium"
+    },
+    "14e98f7dd95a": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/koko-eating-bananas/",
+      "title": "Koko Eating Bananas",
+      "difficulty": "Medium"
+    },
+    "19e6ef0a046f": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/unit-conversion-ii/",
+      "title": "Unit Conversion II",
+      "difficulty": "Medium",
+      "paid": true
+    },
+    "1d5fdb95bc58": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/minimum-operations-to-sort-a-permutation/",
+      "title": "Minimum Operations to Sort a Permutation",
+      "difficulty": "Medium"
+    },
+    "1e42ac08a8ee": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/validate-binary-search-tree/",
+      "title": "Validate Binary Search Tree",
+      "difficulty": "Medium"
+    },
+    "1eef800495fd": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/number-of-good-pairs/",
+      "title": "Number of Good Pairs",
+      "difficulty": "Easy"
+    },
+    "217288c53435": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/binary-tree-maximum-path-sum/",
+      "title": "Binary Tree Maximum Path Sum",
+      "difficulty": "Hard"
+    },
+    "23ecd81d915c": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/hexspeak/",
+      "title": "Hexspeak",
+      "difficulty": "Easy",
+      "paid": true
+    },
+    "277daceff855": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/group-shifted-strings/",
+      "title": "Group Shifted Strings",
+      "difficulty": "Medium",
+      "paid": true
+    },
+    "27c14baee75c": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/decode-string/",
+      "title": "Decode String",
+      "difficulty": "Medium"
+    },
+    "27d36131bfd4": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended/",
+      "title": "Maximum Number of Events That Can Be Attended",
+      "difficulty": "Medium"
+    },
+    "285e7d474bc3": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/",
+      "title": "Best Time to Buy and Sell Stock",
+      "difficulty": "Easy"
+    },
+    "2a4b1a3843d4": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/search-in-rotated-sorted-array/",
+      "title": "Search in Rotated Sorted Array",
+      "difficulty": "Medium"
+    },
+    "2ad9bf000c85": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/maximal-square/",
+      "title": "Maximal Square",
+      "difficulty": "Medium"
+    },
+    "30efa22bf3d9": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/word-search/",
+      "title": "Word Search",
+      "difficulty": "Medium"
+    },
+    "34fc191e4db8": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/meeting-rooms/",
+      "title": "Meeting Rooms",
+      "difficulty": "Easy",
+      "paid": true
+    },
+    "357a4832a810": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/password-strength/",
+      "title": "Password Strength",
+      "difficulty": "Medium"
+    },
+    "366207fa43d4": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/merge-intervals/",
+      "title": "Merge Intervals",
+      "difficulty": "Medium"
+    },
+    "37d16fac2bc2": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/time-needed-to-rearrange-a-binary-string/",
+      "title": "Time Needed to Rearrange a Binary String",
+      "difficulty": "Medium"
+    },
+    "3dad78c2612d": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/number-of-islands-ii/",
+      "title": "Number of Islands II",
+      "difficulty": "Hard",
+      "paid": true
+    },
+    "3fff6b0b71d2": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/squares-of-a-sorted-array/",
+      "title": "Squares of a Sorted Array",
+      "difficulty": "Easy"
+    },
+    "44aaaeec7041": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/word-break-ii/",
+      "title": "Word Break II",
+      "difficulty": "Hard"
+    },
+    "45f2e53763cd": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/number-of-distinct-islands/",
+      "title": "Number of Distinct Islands",
+      "difficulty": "Medium",
+      "paid": true
+    },
+    "490d775126e5": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/meeting-rooms-ii/",
+      "title": "Meeting Rooms II",
+      "difficulty": "Medium",
+      "paid": true
+    },
+    "50b0ef252fa6": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/cousins-in-binary-tree-ii/",
+      "title": "Cousins in Binary Tree II",
+      "difficulty": "Medium"
+    },
+    "50d985257328": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/",
+      "title": "Vertical Order Traversal of a Binary Tree",
+      "difficulty": "Hard"
+    },
+    "55f5622b78b4": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/longest-balanced-substring-after-one-swap/",
+      "title": "Longest Balanced Substring After One Swap",
+      "difficulty": "Medium"
+    },
+    "568212341b90": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/number-of-islands/",
+      "title": "Number of Islands",
+      "difficulty": "Medium"
+    },
+    "568d3c8b954f": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/basic-calculator/",
+      "title": "Basic Calculator",
+      "difficulty": "Hard"
+    },
+    "583795db4457": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/largest-number/",
+      "title": "Largest Number",
+      "difficulty": "Medium"
+    },
+    "61e33812f204": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/maximal-square/",
+      "title": "Maximal Square",
+      "difficulty": "Medium"
+    },
+    "649718a32d56": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/closest-subsequence-sum/",
+      "title": "Closest Subsequence Sum",
+      "difficulty": "Hard"
+    },
+    "655f6dd23e11": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/reverse-integer/",
+      "title": "Reverse Integer",
+      "difficulty": "Medium"
+    },
+    "68a2ed8dec35": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/longest-repeating-character-replacement/",
+      "title": "Longest Repeating Character Replacement",
+      "difficulty": "Medium"
+    },
+    "69988be68a8e": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/sliding-window-maximum/",
+      "title": "Sliding Window Maximum",
+      "difficulty": "Hard"
+    },
+    "6b0bda2df797": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/top-k-frequent-elements/",
+      "title": "Top K Frequent Elements",
+      "difficulty": "Medium"
+    },
+    "6c103e6ad36d": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/minimum-operations-to-make-array-elements-zero/",
+      "title": "Minimum Operations to Make Array Elements Zero",
+      "difficulty": "Hard"
+    },
+    "71cb482d2a1a": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/number-of-divisible-substrings/",
+      "title": "Number of Divisible Substrings",
+      "difficulty": "Medium",
+      "paid": true
+    },
+    "75b9a598e59d": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/count-bowl-subarrays/",
+      "title": "Count Bowl Subarrays",
+      "difficulty": "Medium"
+    },
+    "76030b0b0442": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/search-in-rotated-sorted-array/",
+      "title": "Search in Rotated Sorted Array",
+      "difficulty": "Medium"
+    },
+    "769467732658": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/group-anagrams/",
+      "title": "Group Anagrams",
+      "difficulty": "Medium"
+    },
+    "773782d9cf60": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/count-good-numbers/",
+      "title": "Count Good Numbers",
+      "difficulty": "Medium"
+    },
+    "77bc30e70d9b": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/search-suggestions-system/",
+      "title": "Search Suggestions System",
+      "difficulty": "Medium"
+    },
+    "7f1a8b8572c4": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/remove-stones-to-minimize-the-total/",
+      "title": "Remove Stones to Minimize the Total",
+      "difficulty": "Medium"
+    },
+    "82b976c8ea4d": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/jump-game-iv/",
+      "title": "Jump Game IV",
+      "difficulty": "Hard"
+    },
+    "84af7e842f97": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/longest-valid-parentheses/",
+      "title": "Longest Valid Parentheses",
+      "difficulty": "Hard"
+    },
+    "8ad15d332600": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/rank-transform-of-an-array/",
+      "title": "Rank Transform of an Array",
+      "difficulty": "Easy"
+    },
+    "9143b95c551d": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/reverse-string/",
+      "title": "Reverse String",
+      "difficulty": "Easy"
+    },
+    "92527f431dce": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/minimum-window-substring/",
+      "title": "Minimum Window Substring",
+      "difficulty": "Hard"
+    },
+    "94554c60c593": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/count-binary-substrings/",
+      "title": "Count Binary Substrings",
+      "difficulty": "Easy"
+    },
+    "9612587dcb0c": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/trapping-rain-water/",
+      "title": "Trapping Rain Water",
+      "difficulty": "Hard"
+    },
+    "967e4a58a90d": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/minimum-insertions-to-balance-a-parentheses-string/",
+      "title": "Minimum Insertions to Balance a Parentheses String",
+      "difficulty": "Medium"
+    },
+    "985e94ff0721": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/longest-palindrome/",
+      "title": "Longest Palindrome",
+      "difficulty": "Easy"
+    },
+    "994f925fe48d": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/largest-rectangle-in-histogram/",
+      "title": "Largest Rectangle in Histogram",
+      "difficulty": "Hard"
+    },
+    "9f86842e9344": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/add-digits/",
+      "title": "Add Digits",
+      "difficulty": "Easy"
+    },
+    "a03492ac3fc5": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/largest-number/",
+      "title": "Largest Number",
+      "difficulty": "Medium"
+    },
+    "a32892c47410": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/minimum-removals-to-balance-array/",
+      "title": "Minimum Removals to Balance Array",
+      "difficulty": "Medium"
+    },
+    "a37b8eb6ed2a": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/optimal-account-balancing/",
+      "title": "Optimal Account Balancing",
+      "difficulty": "Hard",
+      "paid": true
+    },
+    "a57b5b180315": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/reconstruct-itinerary/",
+      "title": "Reconstruct Itinerary",
+      "difficulty": "Hard"
+    },
+    "a6b849063437": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/course-schedule/",
+      "title": "Course Schedule",
+      "difficulty": "Medium"
+    },
+    "a7226fed807f": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/find-all-people-with-secret/",
+      "title": "Find All People With Secret",
+      "difficulty": "Hard"
+    },
+    "a72aba33d175": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/number-of-atoms/",
+      "title": "Number of Atoms",
+      "difficulty": "Hard"
+    },
+    "aa80bb4523b8": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/happy-number/",
+      "title": "Happy Number",
+      "difficulty": "Easy"
+    },
+    "ac06a7414d5a": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/beautiful-arrangement/",
+      "title": "Beautiful Arrangement",
+      "difficulty": "Medium"
+    },
+    "ad3fc8d47270": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/validate-ip-address/",
+      "title": "Validate IP Address",
+      "difficulty": "Medium"
+    },
+    "b478c90867d9": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/3sum/",
+      "title": "3Sum",
+      "difficulty": "Medium"
+    },
+    "b74c8ac8e564": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/movie-rating/",
+      "title": "Movie Rating",
+      "difficulty": "Medium"
+    },
+    "b754b8f4e7b5": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/remove-vowels-from-a-string/",
+      "title": "Remove Vowels from a String",
+      "difficulty": "Easy",
+      "paid": true
+    },
+    "be3f7102e485": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/insert-interval/",
+      "title": "Insert Interval",
+      "difficulty": "Medium"
+    },
+    "be66a7d480e4": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/design-task-manager/",
+      "title": "Design Task Manager",
+      "difficulty": "Medium"
+    },
+    "bf2b4e5721c5": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/minimum-operations-to-make-array-equal/",
+      "title": "Minimum Operations to Make Array Equal",
+      "difficulty": "Medium"
+    },
+    "bf9315b4788e": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/lexicographically-smallest-string-after-substring-operation/",
+      "title": "Lexicographically Smallest String After Substring Operation",
+      "difficulty": "Medium"
+    },
+    "c2209ac8c573": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/number-of-ways-to-split-array/",
+      "title": "Number of Ways to Split Array",
+      "difficulty": "Medium"
+    },
+    "c48633c112d0": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/slowest-key/",
+      "title": "Slowest Key",
+      "difficulty": "Easy"
+    },
+    "caf024ed2b38": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/",
+      "title": "Best Time to Buy and Sell Stock",
+      "difficulty": "Easy"
+    },
+    "d36002d84e9a": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/merge-k-sorted-lists/",
+      "title": "Merge k Sorted Lists",
+      "difficulty": "Hard"
+    },
+    "d3ac62dd6a4a": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/",
+      "title": "Longest Substring Without Repeating Characters",
+      "difficulty": "Medium"
+    },
+    "d7ca5433b3f7": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/word-ladder/",
+      "title": "Word Ladder",
+      "difficulty": "Hard"
+    },
+    "d90ab25448d4": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/find-the-maximum-length-of-a-good-subsequence-i/",
+      "title": "Find the Maximum Length of a Good Subsequence I",
+      "difficulty": "Medium"
+    },
+    "da0c003b1215": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/task-scheduler/",
+      "title": "Task Scheduler",
+      "difficulty": "Medium"
+    },
+    "de331621e0ed": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/set-matrix-zeroes/",
+      "title": "Set Matrix Zeroes",
+      "difficulty": "Medium"
+    },
+    "de57c1486532": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/cheapest-flights-within-k-stops/",
+      "title": "Cheapest Flights Within K Stops",
+      "difficulty": "Medium"
+    },
+    "dfe3fc1efcea": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/find-the-median-of-the-uniqueness-array/",
+      "title": "Find the Median of the Uniqueness Array",
+      "difficulty": "Hard"
+    },
+    "e5db735df5bc": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/pascals-triangle/",
+      "title": "Pascal's Triangle",
+      "difficulty": "Easy"
+    },
+    "eca5584eab60": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/find-minimum-cost-to-remove-array-elements/",
+      "title": "Find Minimum Cost to Remove Array Elements",
+      "difficulty": "Medium"
+    },
+    "ecf58ad6b836": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/product-of-array-except-self/",
+      "title": "Product of Array Except Self",
+      "difficulty": "Medium"
+    },
+    "edf8e7133f3f": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/merge-intervals/",
+      "title": "Merge Intervals",
+      "difficulty": "Medium"
+    },
+    "ee0d5fcdff2b": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/merge-sorted-array/",
+      "title": "Merge Sorted Array",
+      "difficulty": "Easy"
+    },
+    "ef352a41e778": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/minimum-right-shifts-to-sort-the-array/",
+      "title": "Minimum Right Shifts to Sort the Array",
+      "difficulty": "Easy"
+    },
+    "f23ecd490fe3": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/last-stone-weight/",
+      "title": "Last Stone Weight",
+      "difficulty": "Easy"
+    },
+    "f35c333f2bb7": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/count-the-number-of-complete-components/",
+      "title": "Count the Number of Complete Components",
+      "difficulty": "Medium"
+    },
+    "f381cccc76f1": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/lru-cache/",
+      "title": "LRU Cache",
+      "difficulty": "Medium"
+    },
+    "f6b97b9cb84d": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/find-the-length-of-the-longest-common-prefix/",
+      "title": "Find the Length of the Longest Common Prefix",
+      "difficulty": "Medium"
+    },
+    "f7956822ea41": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/minimum-operations-to-make-the-integer-zero/",
+      "title": "Minimum Operations to Make the Integer Zero",
+      "difficulty": "Medium"
+    },
+    "f9424216d976": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/single-element-in-a-sorted-array/",
+      "title": "Single Element in a Sorted Array",
+      "difficulty": "Medium"
+    },
+    "fb1ceaeba473": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/number-of-perfect-pairs/",
+      "title": "Number of Perfect Pairs",
+      "difficulty": "Medium"
+    },
+    "fd82703a4f11": {
+      "site": "leetcode",
+      "url": "https://leetcode.com/problems/longest-increasing-subsequence/",
+      "title": "Longest Increasing Subsequence",
+      "difficulty": "Medium"
+    }
+  }
+}

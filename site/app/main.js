@@ -13,7 +13,7 @@ import htm from '../vendor/htm.mjs';
 import {
   STATUSES, STATUS_LABEL, allTags, daysSince, emptyEntry, exportPersonal,
   freshness, importPersonal, isTouched, loadData, loadPersonal, loadTheme,
-  migrate, savePersonal, saveTheme,
+  migrate, originFor, savePersonal, saveTheme, searchUrl,
 } from './store.js';
 import { search } from './search.js';
 
@@ -50,7 +50,8 @@ function fmtDate(iso) {
 function useFilters() {
   const [state, setState] = useState({
     query: '', formats: [], companies: [], statuses: [], tags: [],
-    age: 'all', untouchedOnly: false, showRemoved: false, sort: 'updated',
+    age: 'all', untouchedOnly: false, showRemoved: false, solvableOnly: false,
+    sort: 'updated',
   });
   const patch = useCallback((next) => setState((s) => ({ ...s, ...next })), []);
   const toggleIn = useCallback((key, value) => setState((s) => {
@@ -60,7 +61,7 @@ function useFilters() {
   return [state, patch, toggleIn];
 }
 
-function applyFilters(rows, index, f, personal) {
+function applyFilters(rows, index, f, personal, origins) {
   const hits = search(index, f.query);
   const allowed = hits === null ? null : new Set(hits);
   const wantFormat = new Set(f.formats);
@@ -84,6 +85,7 @@ function applyFilters(rows, index, f, personal) {
     if (wantStatus.size && !wantStatus.has(entry && entry.status)) continue;
     if (wantTags.size && !(entry && (entry.tags || []).some((t) => wantTags.has(t)))) continue;
     if (f.untouchedOnly && isTouched(entry)) continue;
+    if (f.solvableOnly && !origins[row.id]) continue;
     if (maxAge !== Infinity && daysSince(row.first_seen, TODAY) >= maxAge) continue;
     out.push(row);
   }
@@ -146,7 +148,7 @@ function App() {
   }, [openId]);
 
   const visible = useMemo(
-    () => (data ? applyFilters(data.rows, data.index, filters, personal) : []),
+    () => (data ? applyFilters(data.rows, data.index, filters, personal, data.origins) : []),
     [data, filters, personal],
   );
 
@@ -170,10 +172,12 @@ function App() {
     <${Header} ...${{ view, setView, filters, patch, searchRef, theme, setTheme,
                       solved, total: data.rows.length, newCount }} />
     <div class="body">
-      ${view === 'browse' && html`<${Sidebar} ...${{ rows: data.rows, filters, patch, toggleIn, personal }} />`}
+      ${view === 'browse' && html`<${Sidebar} ...${{ rows: data.rows, filters, patch, toggleIn,
+                                                     personal, origins: data.origins }} />`}
       <main>
         ${view === 'browse' && html`<${Browse} ...${{ visible, total: data.rows.length, filters, patch,
-                                                      personal, update, openId, setOpenId }} />`}
+                                                      personal, update, openId, setOpenId,
+                                                      origins: data.origins }} />`}
         ${view === 'new' && html`<${WhatsNew} latest=${data.latest} meta=${data.meta} personal=${personal} bootstrap=${bootstrap} />`}
         ${view === 'stats' && html`<${Stats} rows=${data.rows} personal=${personal} meta=${data.meta}
                                              setPersonal=${setPersonal} />`}
@@ -213,8 +217,14 @@ function Header({ view, setView, filters, patch, searchRef, theme, setTheme, sol
 
 /* --------------------------------------------------------------- sidebar */
 
-function Sidebar({ rows, filters, patch, toggleIn, personal }) {
+function Sidebar({ rows, filters, patch, toggleIn, personal, origins }) {
   const [companyQuery, setCompanyQuery] = useState('');
+
+  // Counted over live rows only, like every other count in this sidebar.
+  const solvableCount = useMemo(
+    () => rows.reduce((n, row) => n + (row.state !== 'removed' && origins[row.id] ? 1 : 0), 0),
+    [rows, origins],
+  );
 
   const companies = useMemo(() => {
     const counts = new Map();
@@ -235,7 +245,8 @@ function Sidebar({ rows, filters, patch, toggleIn, personal }) {
   const needle = companyQuery.trim().toLowerCase();
   const shown = needle ? companies.filter(([c]) => c.toLowerCase().includes(needle)) : companies.slice(0, 40);
   const active = filters.formats.length + filters.companies.length + filters.statuses.length
-    + filters.tags.length + (filters.age !== 'all' ? 1 : 0) + (filters.untouchedOnly ? 1 : 0);
+    + filters.tags.length + (filters.age !== 'all' ? 1 : 0) + (filters.untouchedOnly ? 1 : 0)
+    + (filters.solvableOnly ? 1 : 0);
 
   return html`<aside>
     <h3>Format</h3>
@@ -254,6 +265,15 @@ function Sidebar({ rows, filters, patch, toggleIn, personal }) {
         </button>`)}
       <button class="chip" aria-pressed=${filters.untouchedOnly}
               onClick=${() => patch({ untouchedOnly: !filters.untouchedOnly })}>Untouched</button>
+    </div>
+
+    <h3>Where I can solve it</h3>
+    <div class="chips">
+      <button class="chip" aria-pressed=${filters.solvableOnly}
+              title="Only questions with a direct LeetCode link — the rest are fastprep originals behind a sign-in"
+              onClick=${() => patch({ solvableOnly: !filters.solvableOnly })}>
+        On LeetCode<span class="n">${solvableCount}</span>
+      </button>
     </div>
 
     ${tags.length > 0 && html`
@@ -293,13 +313,14 @@ function Sidebar({ rows, filters, patch, toggleIn, personal }) {
     ${active > 0 && html`
       <button class="clear-all" onClick=${() => patch({
         formats: [], companies: [], statuses: [], tags: [], age: 'all', untouchedOnly: false,
+        solvableOnly: false,
       })}>Clear ${active} filter${active > 1 ? 's' : ''}</button>`}
   </aside>`;
 }
 
 /* ---------------------------------------------------------------- browse */
 
-function Browse({ visible, total, filters, patch, personal, update, openId, setOpenId }) {
+function Browse({ visible, total, filters, patch, personal, update, openId, setOpenId, origins }) {
   const scroller = useRef(null);
   const cycleStatus = (id) => {
     const current = (personal[id] || {}).status;
@@ -342,15 +363,17 @@ function Browse({ visible, total, filters, patch, personal, update, openId, setO
             ${slice.map((row, i) => html`
               <${Row} key=${row.id} row=${row} top=${(first + i) * ROW_H}
                       entry=${personal[row.id]} open=${openId === row.id}
+                      origin=${origins[row.id]}
                       onOpen=${() => setOpenId(openId === row.id ? null : row.id)}
                       onCycle=${() => cycleStatus(row.id)} />`)}
           </div>`}
     </div>
     ${open && html`<${Detail} row=${open} entry=${personal[openId] || emptyEntry()}
+                              origin=${originFor(open, origins)}
                               update=${update} close=${() => setOpenId(null)} />`}`;
 }
 
-function Row({ row, top, entry, open, onOpen, onCycle }) {
+function Row({ row, top, entry, open, origin, onOpen, onCycle }) {
   const mark = freshness(row, TODAY);
   const status = entry && entry.status;
   return html`
@@ -361,6 +384,7 @@ function Row({ row, top, entry, open, onOpen, onCycle }) {
               onClick=${(e) => { e.stopPropagation(); onCycle(); }}></button>
       <span class="title">${row.title}</span>
       ${entry && entry.notes ? html`<span class="note-dot" title="Has notes">✎</span>` : null}
+      ${origin ? html`<span class="lc-dot" title=${`Solvable on LeetCode — ${origin.title}`}>LC</span>` : null}
       <span class="cos">${row.companies.slice(0, 3).map((c) => html`<span class="co">${c}</span>`)}</span>
       <span class="fmt">${row.format}</span>
       <span class="when">
@@ -370,7 +394,35 @@ function Row({ row, top, entry, open, onOpen, onCycle }) {
     </div>`;
 }
 
-function Detail({ row, entry, update, close }) {
+/* Where to go and solve it.
+ *
+ * Upstream's own link is demoted rather than dropped: it is the only place the
+ * question is guaranteed to exist verbatim, and for a question that exists
+ * nowhere else it is still the answer -- it just should not be the button that
+ * looks like the way in, because it opens onto a sign-in wall.
+ *
+ * When we know the LeetCode original, that becomes the primary action. Premium
+ * questions say so, because a link that swaps one wall for another while
+ * looking like the way past it is worse than no promise at all. */
+function OpenLinks({ row, origin }) {
+  const external = (href, cls, label, title) => html`
+    <a class=${cls} href=${href} target="_blank" rel="noopener noreferrer" title=${title}>${label}</a>`;
+
+  return html`<div class="open-links">
+    ${origin
+      ? html`<div class="open-primary">
+          ${external(origin.url, 'open-link', 'Solve on LeetCode ↗',
+                     `${origin.title}${origin.difficulty ? ` — ${origin.difficulty}` : ''}`)}
+          ${origin.paid && html`<span class="link-note">LeetCode Premium</span>`}
+        </div>`
+      : external(searchUrl(row), 'open-link', 'Find it on the web ↗',
+                 'No known LeetCode original — search for this question')}
+    ${row.url && external(row.url, 'alt-link', 'Source ↗',
+                          'fastprep.io — the upstream write-up, needs an account')}
+  </div>`;
+}
+
+function Detail({ row, entry, origin, update, close }) {
   const [tagDraft, setTagDraft] = useState('');
   if (!row) return null;
 
@@ -390,10 +442,15 @@ function Detail({ row, entry, update, close }) {
           <span>${row.format}</span>
           <span>Updated ${fmtDate(row.upstream_updated)}</span>
           <span>First seen ${fmtDate(row.first_seen)}</span>
+          ${origin && origin.difficulty && html`<span>LeetCode ${origin.difficulty}</span>`}
           ${row.state === 'removed' && html`<span style="color:var(--revisit)">Removed upstream ${fmtDate(row.removed_on)}</span>`}
         </div>
+        ${/* Upstream retitles freely, so the two names often differ. Showing
+              LeetCode's makes the match checkable instead of asking for trust. */
+          origin && origin.title !== row.title && html`
+          <div class="detail-origin">Same question on LeetCode as <b>${origin.title}</b></div>`}
       </div>
-      ${row.url && html`<a class="open-link" href=${row.url} target="_blank" rel="noopener noreferrer">Practice ↗</a>`}
+      <${OpenLinks} row=${row} origin=${origin} />
       <button class="icon-btn" onClick=${close} title="Close (Esc)">✕</button>
     </div>
 

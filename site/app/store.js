@@ -21,13 +21,23 @@ export const FIRE_DAYS = 14;
 export const NEW_DAYS = 45;
 
 export async function loadData(base = 'data') {
-  const [problems, index, latest, meta] = await Promise.all([
+  const [problems, index, latest, meta, origins] = await Promise.all([
     getJSON(`${base}/problems.json`),
     getJSON(`${base}/index.json`),
     getJSON(`${base}/changes/latest.json`).catch(() => null),
     getJSON(`${base}/meta.json`).catch(() => null),
+    getJSON(`${base}/origins.json`).catch(() => null),
   ]);
-  return { rows: problems.problems, index, latest, meta };
+  return {
+    rows: problems.problems,
+    index,
+    latest,
+    meta,
+    // Optional by design: origins.json is regenerated against a third party on
+    // its own schedule, so a missing or stale one must degrade to the search
+    // fallback rather than take the app down with it.
+    origins: (origins && origins.origins) || {},
+  };
 }
 
 async function getJSON(url) {
@@ -48,6 +58,29 @@ export function freshness(row, today) {
   if (age <= FIRE_DAYS) return 'fire';
   if (age <= NEW_DAYS) return 'new';
   return null;
+}
+
+/* ---- where to actually solve it ---------------------------------------- */
+
+/* Upstream's own link goes to fastprep.io, which asks for an account before it
+ * will show the question. `origins.json` carries a direct link for the ~5% of
+ * the bank that exists on LeetCode under a title we can match with certainty;
+ * everything else is a fastprep-original OA write-up that exists nowhere else,
+ * so the best honest offer is a search seeded with what we know about it.
+ *
+ * The query is built here rather than baked into the artifact: ~1,800 search
+ * URLs would be a large file carrying nothing the client cannot derive. */
+const CODE_FORMATS = ['Coding', 'SQL'];
+
+export function originFor(row, origins) {
+  return (origins && origins[row.id]) || null;
+}
+
+export function searchUrl(row) {
+  const parts = [`"${row.title}"`];
+  if (row.companies.length) parts.push(row.companies[0]);
+  parts.push(CODE_FORMATS.includes(row.format) ? 'leetcode' : 'interview question');
+  return `https://www.google.com/search?q=${encodeURIComponent(parts.join(' '))}`;
 }
 
 /* ---- personal layer ---------------------------------------------------- */

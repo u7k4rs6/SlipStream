@@ -173,6 +173,7 @@ personal plane.**
 │  data/problems.json    normalized dataset                     │
 │  data/archive.json     permanent tombstone archive            │
 │  data/changes/*.json   per-day diffs                          │
+│  data/origins.json     login-free link per resolvable problem │
 │  CHANGELOG.md                                                 │
 │  site/            static frontend → GitHub Pages              │
 └───────────────────────────┬───────────────────────────────────┘
@@ -301,9 +302,54 @@ Sync emits, into `site/data/`:
 - `index.json` — prebuilt search index (see `frontend-spec.md`).
 - `changes/YYYY-MM-DD.json` + `changes/latest.json`.
 - `meta.json` — upstream SHA, sync timestamp, row counts, warnings.
+- `origins.json` — problem ID → a link that opens without an account (see §5.1).
 
 At ~10,000 rows this is still ~2 MB raw / ~300 KB gzipped — acceptable. Beyond that, shard by
 format. Not needed now; noted as a threshold.
+
+### 5.1 Origin links
+
+Every upstream URL points at fastprep.io, which asks for an account before it will show the
+question — so following the link the dataset carries is not, on its own, a way to solve
+anything. `origins.py` resolves what it can against LeetCode's public catalogue and emits
+`origins.json`, keyed by problem ID.
+
+Three properties are deliberate:
+
+- **Separate artifact, not a field on `Problem`.** It depends on a third party moving on its
+  own schedule, so it must never be able to fail or stall the upstream sync; and a new field
+  would rewrite all ~1,900 records the day it landed, burying that day's real diff.
+- **Precision over coverage.** 103 of 1,932 rows (5.3%) resolve. The rest are
+  fastprep-original OA write-ups that exist nowhere else under any title. Matching widens in
+  four steps — exact title, stopword-insensitive token set, the same with upstream's
+  abbreviations and plurals folded in (`Num of Good Pairs` / `Number of Good Pairs`), then
+  minus a leading imperative verb (`Is Happy Number` / `Happy Number`) — and *every* step
+  requires a unique hit. An ambiguous title resolves to nothing, because a wrong link sends
+  you to confidently solve the wrong question and file notes against it.
+- **Only `Coding` and `SQL` are eligible.** Without that gate, `Design a Web Crawler` (system
+  design) resolves to LeetCode 1236 `Web Crawler`, an unrelated coding exercise that happens
+  to share a name. The gate costs nothing today — no non-coding row matched anyway — and
+  closes the whole class.
+- **Unmatched rows get no entry.** The client derives a seeded web search from the title it
+  already has; baking ~1,800 search URLs would be a large artifact carrying no information.
+
+LeetCode Premium questions are linked but flagged, since premium is another sign-in wall and a
+link that swaps one wall for another while looking like the way past it is worse than none.
+
+**Rejected: slug matching.** Stripping the company prefix off upstream's URL slug and comparing
+it to LeetCode's resolves ~47 more rows, and roughly a quarter of them are wrong — `Shopping
+and Billing` → `Palindromic Substrings`, `Tool Changer` → `Split Array Largest Sum`, `Design an
+Authenticated Page Presence Counter` → `Counter`. Scoring the candidates by title overlap does
+not separate them: upstream's questions are frequently deliberate *variants* of a LeetCode
+problem, so `Longest Palindromic Subarray` scores 0.67 against `Longest Palindromic Substring`
+and `Min Cost To Collect All Points` scores 0.80 against `Min Cost to Connect All Points`. No
+similarity threshold can know the difference. The measurable win was smaller and safer: those
+misses were mostly *lexical* variants, which is what steps 3 and 4 above now catch — 20 further
+rows, every one verified by hand, with none of the false positives.
+
+One trap worth recording: `and` must not be treated as a stopword. LeetCode has `Maximum AND
+Sum of Array`, where the AND is the bitwise operator; folding it away matched that question to
+an upstream row about a plain maximum sum.
 
 ## 6. Scheduling
 
@@ -398,7 +444,7 @@ slipstream/                  (public)
 ├─ docs/
 ├─ src/slipstream/           parser · normalizer · differ · emitter
 ├─ tests/fixtures/upstream/  pinned real snapshots
-├─ data/                     problems.json · archive.json · changes/ · meta.json
+├─ data/                     problems.json · archive.json · changes/ · meta.json · origins.json
 ├─ site/                     static frontend
 └─ CHANGELOG.md
 

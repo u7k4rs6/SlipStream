@@ -37,21 +37,43 @@ jobs:
         env:
           PYTHONPATH: src
 
+      # Upstream's links all sit behind a fastprep.io sign-in, so the site also
+      # publishes a login-free route to the ~5% of questions that exist on
+      # LeetCode. That map depends on a third party we do not control, so a bad
+      # day at LeetCode must cost us the refresh and nothing else -- never the
+      # sync, and never the existing origins.json, which stays valid until it is
+      # deliberately replaced.
+      - name: Refresh origin links
+        id: origins
+        continue-on-error: true
+        run: python -m slipstream.origins --data site/data
+        env:
+          PYTHONPATH: src
+
       # `git diff` cannot answer this: meta.json carries a fresh synced_at every
       # run, so the tree always looks dirty. The sync reports what actually moved.
+      # origins.json is exempt because it moves on LeetCode's schedule, not
+      # upstream's -- a day where only it changed is a real change, not noise.
       - name: Discard a no-op run
         if: steps.sync.outputs.dataset_changed != 'true'
         run: |
-          echo "nothing changed; discarding the refreshed timestamp"
-          git checkout -- site/data CHANGELOG.md 2>/dev/null || true
+          echo "upstream unchanged; discarding the refreshed timestamp"
+          git checkout -- CHANGELOG.md 2>/dev/null || true
+          git ls-files --modified site/data \
+            | grep -v '^site/data/origins\.json$' \
+            | xargs -r git checkout -- 2>/dev/null || true
 
-      - name: Commit if the dataset moved
-        if: steps.sync.outputs.dataset_changed == 'true'
+      - name: Commit if anything moved
+        if: steps.sync.outputs.dataset_changed == 'true' || steps.origins.outputs.origins_changed == 'true'
         run: |
           git config user.name  "slipstream-sync"
           git config user.email "actions@github.com"
           git add site/data CHANGELOG.md
-          git commit -m "Sync upstream ${{ steps.sync.outputs.upstream_sha }}"
+          if [ "${{ steps.sync.outputs.dataset_changed }}" = "true" ]; then
+            git commit -m "Sync upstream ${{ steps.sync.outputs.upstream_sha }}"
+          else
+            git commit -m "Refresh origin links (${{ steps.origins.outputs.origins_count }} direct)"
+          fi
           git push
 
       # FR-7: a failed sync must be loud. A silently broken daily job is

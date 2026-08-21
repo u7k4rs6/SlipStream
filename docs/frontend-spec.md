@@ -148,6 +148,31 @@ at 1,944 rows; documented as a threshold (~10,000).
 - Removed/tombstoned rows: struck through, muted, hidden by default, with a "removed upstream
   on DATE" note — never silently disappeared.
 
+### 6.1 Open links
+
+The upstream link goes to fastprep.io, which asks for an account before showing the question,
+so it is never the primary action. The detail panel offers, in order:
+
+1. **Solve on LeetCode ↗** when `origins.json` holds a confident match — labelled
+   *LeetCode Premium* when the target is paywalled, because a link that swaps one sign-in
+   wall for another has to say so.
+2. **Find it on the web ↗** otherwise — a search seeded with the title, first company, and
+   `leetcode` or `interview question` depending on format. Built client-side; the artifact
+   carries only real matches.
+3. **Source ↗** always, styled quietly. It is the only place the question is guaranteed to
+   exist verbatim, so it is demoted rather than dropped.
+
+`origins.json` is loaded optionally: a missing or stale one degrades to the search fallback
+rather than breaking the panel.
+
+In the list, a resolvable row carries a small `LC` badge (tooltip: LeetCode's own title for it),
+and the sidebar offers a **Where I can solve it → On LeetCode** filter with a live count. The
+badge is styled quietly on purpose: it marks the ~5% that have a direct link, and must not read
+as a defect on the 95% that simply have no original anywhere else.
+
+Where the two titles differ — upstream retitles freely — the panel spells out *"Same question on
+LeetCode as X"*, so the match is checkable rather than something you have to take on trust.
+
 ## 7. "What's new" view
 
 Reads `data/changes/latest.json`, grouped by change type:
@@ -230,7 +255,7 @@ LeetCode · export to Anki · sharing. All are additive later.
 | # | Decision | Where it lands |
 | --- | --- | --- |
 | D1 | Role type is a **personal tag only**, never an upstream facet | §4 |
-| D4 | Practice links surfaced on every row | §6 |
+| D4 | Practice links surfaced on every row | §6, §6.1 |
 | D15 | **Preact + HTM**, vendored, no build step | §2 |
 | D16 | **Browse is the default view**; header badge shows today's added count and links to What's new | §3, §7 |
 | D17 | Removed rows: shown by default **only** where I have personal data, badged "removed upstream"; others behind a toggle | §4, §6 |

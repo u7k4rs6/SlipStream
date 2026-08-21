@@ -65,6 +65,7 @@ The sync job has no write path to personal data in either arrangement.
 | `src/slipstream/diff.py` | added · removed · retitled · relinked · recompanied, plus tombstones and aliases |
 | `src/slipstream/guards.py` | Abort thresholds — zero rows, >10% row loss, source divergence, unclassified rows |
 | `src/slipstream/emit.py` | `problems.json`, search index, archive, change docs, meta, CHANGELOG |
+| `src/slipstream/origins.py` | Maps problems to a login-free place to solve them (`origins.json`) |
 | `src/slipstream/fetch.py` · `sync.py` | Pinned upstream fetch and the orchestrator |
 | `site/` | The static frontend: browse, search, notes, what's-new, progress |
 
